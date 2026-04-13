@@ -99,11 +99,6 @@ def main():
     print(sphere_volume(n,d))
     print(f"Actual volume of {d} dimensional sphere = {hypersphere_exact(n,d)}")
 
-    n = 100000
-    d = 11
-    print(sphere_volume_naive_oneliner(n,d))
-    print(f"Actual volume of {d} dimensional sphere = {hypersphere_exact(n,d)}")
-
     #Ex3
     n = 100000
     d = 11
