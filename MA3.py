@@ -74,7 +74,8 @@ def sphere_volume_parallel2(n,d,np=10):
     # d is the number of dimensions of the sphere
     #np is the number of processes
     base, remainder = divmod(n, np)
-    chunks = [base + (1 if i < remainder else 0) for i in range(np) if base + (1 if i < remainder else 0) > 0]
+    chunks = [base + (i < remainder) for i in range(np)]
+    chunks = [chunk for chunk in chunks if chunk > 0]
 
     with future.ProcessPoolExecutor(max_workers=np) as ex:
         results = list(ex.map(sphere_volume, chunks, [d]*len(chunks)))
@@ -103,32 +104,32 @@ def main():
     n = 100000
     d = 11
     start = pc()
-    sequential_results = []
-    for y in range(10):
-        sequential_results.append(sphere_volume(n,d))
+    for _ in range(10):
+        sphere_volume(n,d)
     stop = pc()
-    print(f"Ex3: Sequential average of {d} and {n}: {mean(sequential_results)}")
     print(f"Ex3: Sequential time of {d} and {n}: {stop-start}")
+    
 
     start = pc()
-    parallel_average = sphere_volume_parallel1(n,d)
+    for _ in range(10):
+        sphere_volume_parallel1(n,d)
     stop = pc()
-    print(f"Ex3: Parallel average of {d} and {n}: {parallel_average}")
     print(f"Ex3: Parallel time of {d} and {n}: {stop-start}")
+
 
     #Ex4
     n = 1000000
     d = 11
     start = pc()
-    sequential_volume = sphere_volume(n,d)
+    for _ in range(10):
+        sphere_volume(n,d)
     stop = pc()
-    print(f"Ex4: Sequential volume of {d} and {n}: {sequential_volume}")
     print(f"Ex4: Sequential time of {d} and {n}: {stop-start}")
 
     start = pc()
-    parallel_volume = sphere_volume_parallel2(n,d)
+    for _ in range(10):
+        sphere_volume_parallel2(n,d)
     stop = pc()
-    print(f"Ex4: Parallel volume of {d} and {n}: {parallel_volume}")
     print(f"Ex4: Parallel time of {d} and {n}: {stop-start}")
 
 
