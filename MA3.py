@@ -2,8 +2,8 @@
 
 Student: Isac Carlsson
 Mail: isac.carlsson.5508@student.uu.se
-Reviewed by:
-Date reviewed:
+Reviewed by: Ivar Hammarberg
+Date reviewed: 16 Apr
 
 """
 from random import uniform, random
@@ -14,6 +14,7 @@ import concurrent.futures as future
 from statistics import mean
 from time import perf_counter as pc
 from functools import reduce
+from os import cpu_count
 
 
 def approximate_pi(n): # Ex1
@@ -48,7 +49,7 @@ def sphere_volume(n, d): #Ex2, approximation
 
 
 def sphere_volume_oneliner(n,d):
-    return sum(sum(uniform(-1, 1)**2 for _ in [0]*d) <= 1 for _ in [0]*n) * 2**d / n
+    return sum(sum(uniform(-1,1)**2 for _ in[0]*d)<=1 for _ in[0]*n)*2**d/n
 
 
 def hypersphere_exact(n,d): #Ex2, real value
@@ -58,18 +59,18 @@ def hypersphere_exact(n,d): #Ex2, real value
 
 
 #Ex3: parallel code - parallelize for loop
-def sphere_volume_parallel1(n,d,np=10):
+def sphere_volume_parallel1(n,d,np=cpu_count()):
     #n is the number of points
     # d is the number of dimensions of the sphere
     #np is the number of processes
     with future.ProcessPoolExecutor(max_workers=np) as ex:
-        results = list(ex.map(sphere_volume, [n]*10, [d]*10))
+        results = list(ex.map(sphere_volume, [n]*np, [d]*np))
 
     return mean(results)
 
 
 #Ex4: parallel code - parallelize actual computations by splitting data
-def sphere_volume_parallel2(n,d,np=10):
+def sphere_volume_parallel2(n,d,np=cpu_count()):
     #n is the number of points
     # d is the number of dimensions of the sphere
     #np is the number of processes
